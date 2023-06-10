@@ -1,5 +1,6 @@
 package com.omnicommerce.user;
 
+import com.omnicommerce.token.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,5 +17,10 @@ public class UserServiceImpl implements UserService {
         User user = new User(null, userDTO.getEmail(), userDTO.getUsername(), passwordEncoder.encode(userDTO.getPassword()));
         user = userRepository.save(user);
         return user;
+    }
+
+    @Override
+    public String login(UserDTO userDTO) {
+        return TokenUtil.generateToken(userDTO.getEmail());
     }
 }

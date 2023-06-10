@@ -2,6 +2,7 @@ package com.omnicommerce;
 
 import com.omnicommerce.user.User;
 import com.omnicommerce.user.UserRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
+@Log4j2
 @SpringBootApplication
 public class OmnicommerceApplication {
     @Autowired
@@ -30,7 +32,12 @@ public class OmnicommerceApplication {
     public CommandLineRunner commandLineRunner() {
         return (args) -> {
             Optional<UserDetails> user = Optional.ofNullable(userDetailsService.loadUserByUsername("admin"));
-            user.ifPresent(System.out::print);
+            user.ifPresent(u -> {
+                User admin = (User) u;
+                log.debug(admin.getEmail());
+                log.debug(admin.getUsername());
+                log.debug(admin.getAuthorities());
+            });
             if (!user.isPresent()) {
                 User newUser = new User();
                 newUser.setEmail("admin@gmail.com");
