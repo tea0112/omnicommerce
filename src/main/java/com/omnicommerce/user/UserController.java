@@ -1,5 +1,6 @@
 package com.omnicommerce.user;
 
+import com.omnicommerce.global.exception.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Object> signup(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<Object> signup(@RequestBody UserDTO userDTO) throws UserException {
         User user = userService.save(userDTO);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
