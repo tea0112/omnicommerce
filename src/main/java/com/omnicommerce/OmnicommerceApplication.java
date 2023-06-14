@@ -2,6 +2,8 @@ package com.omnicommerce;
 
 import com.omnicommerce.user.User;
 import com.omnicommerce.user.UserRepository;
+import com.omnicommerce.user.role.Role;
+import com.omnicommerce.user.role.RoleRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -18,6 +20,8 @@ import java.util.Optional;
 @SpringBootApplication
 public class OmnicommerceApplication {
     @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private UserDetailsService userDetailsService;
@@ -32,18 +36,23 @@ public class OmnicommerceApplication {
     public CommandLineRunner commandLineRunner() {
         return (args) -> {
             Optional<UserDetails> user = Optional.ofNullable(userDetailsService.loadUserByUsername("admin"));
-            user.ifPresent(u -> {
-                User admin = (User) u;
-                log.debug(admin.getEmail());
-                log.debug(admin.getUsername());
-                log.debug(admin.getAuthorities());
-            });
             if (!user.isPresent()) {
                 User newUser = new User();
                 newUser.setEmail("admin@gmail.com");
                 newUser.setUsername("admin");
                 newUser.setPassword(passwordEncoder.encode("admin"));
                 userRepository.save(newUser);
+            }
+
+            Optional<Role> userRole = roleRepository.findByName("ROLE_USER");
+            Optional<Role> adminRole = roleRepository.findByName("ROLE_ADMIN");
+            if (!userRole.isPresent()) {
+                Role newUserRole = new Role(null, "ROLE_USER");
+                roleRepository.save(newUserRole);
+            }
+            if (!adminRole.isPresent()) {
+                Role newAdminRole = new Role(null, "ROLE_ADMIN");
+                roleRepository.save(newAdminRole);
             }
         };
     }

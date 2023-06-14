@@ -1,8 +1,6 @@
 package com.omnicommerce.token.util;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.*;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -14,10 +12,10 @@ public class TokenUtil {
     static private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
     static private final Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
-    static public String generateToken(String email) {
+    static public String generateToken(String username) {
 
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(username)
                 .signWith(signatureAlgorithm, signingKey)
                 .compact();
     }
@@ -31,11 +29,15 @@ public class TokenUtil {
         return true;
     }
 
-    static public String extractTokenFromHeader(String authorizationHeader) throws Exception {
+    static public String extractTokenFromHeader(String authorizationHeader) {
         String beginningBearChars = "Bear ";
         if (!authorizationHeader.startsWith(beginningBearChars)) {
             throw new IllegalArgumentException();
         }
         return authorizationHeader.substring(beginningBearChars.length());
+    }
+
+    static public String getSubject(String token) {
+        return Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token).getBody().getSubject();
     }
 }

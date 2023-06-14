@@ -1,6 +1,8 @@
 package com.omnicommerce.user;
 
-import com.omnicommerce.global.exception.UserException;
+import com.omnicommerce.golobal.exception.LoginException;
+import com.omnicommerce.golobal.exception.UserNotFoundException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,13 +19,13 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Object> signup(@RequestBody UserDTO userDTO) throws UserException {
+    public ResponseEntity<Object> signup(@RequestBody UserDTO userDTO) throws ConstraintViolationException {
         User user = userService.save(userDTO);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody UserDTO userDTO) throws UserNotFoundException, LoginException {
         Map<String, String> bearToken = new HashMap<>();
         bearToken.put("bearToken", userService.login(userDTO));
         return new ResponseEntity<>(bearToken, HttpStatus.OK);

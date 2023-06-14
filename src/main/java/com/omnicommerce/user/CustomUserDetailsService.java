@@ -11,10 +11,9 @@ import java.util.Optional;
 public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
-
     @Override
     public UserDetails loadUserByUsername(String username) {
-        Optional<User> user = userRepository.findByUsername(username);
-        return user.orElse(null);
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        return userOptional.orElse(null);
     }
 }

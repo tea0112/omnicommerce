@@ -1,4 +1,4 @@
-package com.omnicommerce.global.exception;
+package com.omnicommerce.reponse.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;

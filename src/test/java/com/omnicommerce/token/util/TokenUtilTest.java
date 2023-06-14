@@ -21,8 +21,16 @@ class TokenUtilTest {
 
     @Test
     void extractTokenFromHeaderShouldThrow() {
-        String bearToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGFpdmlwdG4xMjAxQGdtYWlsLmNvbSJ9.9QnwmLQp5I3q-q_KruyzeMBJWsXqPnifrhmrB3m3ryw";
+        String throwableToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGFpdmlwdG4xMjAxQGdaYWlsLmNvbSJ9.9QnwmLQp5I3q-q_KruyzeMBJWsXqPnifrhmrB3m3ryw";
 
-        assertThrows(Exception.class, () -> TokenUtil.extractTokenFromHeader(bearToken));
+        assertThrows(Exception.class, () -> TokenUtil.extractTokenFromHeader(throwableToken));
+    }
+
+    @Test
+    void getBody() {
+        String expected = "email@gmail.com";
+        String token = TokenUtil.generateToken(expected);
+        String actual = TokenUtil.getSubject(token);
+        assertEquals(expected, actual);
     }
 }
