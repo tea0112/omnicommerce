@@ -1,18 +1,17 @@
 package com.omnicommerce.reponse.exception;
 
+import static com.omnicommerce.reponse.exception.ApiError.ApiErrorResponseEntities;
+
 import com.omnicommerce.golobal.exception.ErrorCodes;
 import com.omnicommerce.golobal.exception.LoginException;
 import com.omnicommerce.golobal.exception.UserNotFoundException;
+import javax.servlet.ServletException;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import javax.servlet.ServletException;
-
-import static com.omnicommerce.reponse.exception.ApiError.ApiErrorResponseEntities;
 
 @Log4j2
 @ControllerAdvice

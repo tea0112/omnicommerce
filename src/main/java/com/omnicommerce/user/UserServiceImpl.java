@@ -4,12 +4,11 @@ import com.omnicommerce.golobal.exception.ErrorCodes;
 import com.omnicommerce.golobal.exception.LoginException;
 import com.omnicommerce.golobal.exception.UserNotFoundException;
 import com.omnicommerce.token.util.TokenUtil;
+import java.util.Optional;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {

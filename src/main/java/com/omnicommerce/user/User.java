@@ -1,10 +1,9 @@
 package com.omnicommerce.user;
 
+import java.util.Collection;
+import javax.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import javax.persistence.*;
-import java.util.Collection;
 
 @Entity
 @Table(name = "users")
@@ -44,17 +43,13 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    @Override
+    public String getPassword() {
+        return this.password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    @Override
-    public String getPassword() {
-        return this.password;
     }
 
     public Collection<GrantedAuthority> getRoles() {
@@ -68,6 +63,10 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override

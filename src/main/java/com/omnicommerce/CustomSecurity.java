@@ -1,6 +1,9 @@
 package com.omnicommerce;
 
 import com.omnicommerce.filter.JwtFilter;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -14,43 +17,45 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 @Component
 public class CustomSecurity {
-    @Autowired
-    @Qualifier("customAccessDeniedHandler")
-    private AccessDeniedHandler customAccessDeniedHandler;
-    @Autowired
-    private UserDetailsService userDetailsService;
-    private final Set<String> ShouldNotFilterPaths = new HashSet<>(Arrays.asList("/api/users/login", "/api/users/signup"));
+  private final Set<String> ShouldNotFilterPaths =
+      new HashSet<>(Arrays.asList("/api/users/login", "/api/users/signup"));
 
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Autowired
+  @Qualifier("customAccessDeniedHandler")
+  private AccessDeniedHandler customAccessDeniedHandler;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+  @Autowired private UserDetailsService userDetailsService;
 
-        http.authorizeHttpRequests(auth -> {
-            auth.antMatchers("/api/users/signup").permitAll();
-            auth.antMatchers("/api/users/login").permitAll();
+  @Bean
+  public PasswordEncoder encoder() {
+    return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.csrf().disable();
+
+    http.authorizeHttpRequests(
+        auth -> {
+          auth.antMatchers("/api/users/signup").permitAll();
+          auth.antMatchers("/api/users/login").permitAll();
         });
 
-        http.authorizeHttpRequests(auth -> {
-            auth.antMatchers("/api/users/test-jwt").hasRole("USER");
+    http.authorizeHttpRequests(
+        auth -> {
+          auth.antMatchers("/api/users/test-jwt").hasRole("USER");
         });
 
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.addFilterBefore(new JwtFilter(this.ShouldNotFilterPaths, userDetailsService), UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(
+        new JwtFilter(this.ShouldNotFilterPaths, userDetailsService),
+        UsernamePasswordAuthenticationFilter.class);
 
-        http.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler);
+    http.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler);
 
-        return http.build();
-    }
+    return http.build();
+  }
 }

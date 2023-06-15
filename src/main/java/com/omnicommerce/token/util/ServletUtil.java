@@ -1,14 +1,13 @@
 package com.omnicommerce.token.util;
 
+import static com.omnicommerce.reponse.exception.ApiError.ApiErrors;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-import static com.omnicommerce.reponse.exception.ApiError.ApiErrors;
 
 public class ServletUtil {
     public static void handleServletException(Logger log, HttpServletResponse response, String errorCode, String message, Throwable ex) throws IOException {

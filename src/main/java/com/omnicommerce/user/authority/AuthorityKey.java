@@ -1,10 +1,9 @@
 package com.omnicommerce.user.authority;
 
-import lombok.EqualsAndHashCode;
-
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import java.io.Serializable;
+import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
 @Embeddable

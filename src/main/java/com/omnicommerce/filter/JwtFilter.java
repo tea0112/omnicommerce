@@ -5,6 +5,12 @@ import com.omnicommerce.golobal.exception.UserNotFoundException;
 import com.omnicommerce.token.util.ServletUtil;
 import com.omnicommerce.token.util.TokenUtil;
 import com.omnicommerce.user.User;
+import java.io.IOException;
+import java.util.Set;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,13 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Set;
 
 @Log4j2
 public class JwtFilter extends OncePerRequestFilter {

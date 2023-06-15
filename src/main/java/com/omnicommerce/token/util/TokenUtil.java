@@ -1,10 +1,9 @@
 package com.omnicommerce.token.util;
 
 import io.jsonwebtoken.*;
-
+import java.security.Key;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
-import java.security.Key;
 
 public class TokenUtil {
     static private final String SECRET_KEY = "SECRET";

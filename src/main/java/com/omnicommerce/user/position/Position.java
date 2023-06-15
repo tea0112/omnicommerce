@@ -2,7 +2,6 @@ package com.omnicommerce.user.position;
 
 import com.omnicommerce.user.User;
 import com.omnicommerce.user.role.Role;
-
 import javax.persistence.*;
 
 @Entity

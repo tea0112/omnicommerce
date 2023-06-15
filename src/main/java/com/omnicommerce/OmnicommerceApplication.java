@@ -7,6 +7,8 @@ import com.omnicommerce.user.position.PositionKey;
 import com.omnicommerce.user.position.PositionRepository;
 import com.omnicommerce.user.role.Role;
 import com.omnicommerce.user.role.RoleRepository;
+import java.util.List;
+import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -16,9 +18,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.List;
-import java.util.Optional;
 
 @Log4j2
 @SpringBootApplication
