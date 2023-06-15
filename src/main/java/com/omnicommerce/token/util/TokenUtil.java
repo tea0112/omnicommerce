@@ -20,13 +20,8 @@ public class TokenUtil {
                 .compact();
     }
 
-    static public boolean parseJwt(String token) {
-        try {
-            Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token);
-        } catch (SignatureException e) {
-            return false;
-        }
-        return true;
+    static public void parseJwt(String token) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException {
+        Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token);
     }
 
     static public String extractTokenFromHeader(String authorizationHeader) {

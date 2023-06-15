@@ -1,6 +1,9 @@
-package com.omnicommerce.token.util;
+package com.omnicommerce.filter;
 
 import com.omnicommerce.golobal.exception.ErrorCodes;
+import com.omnicommerce.golobal.exception.UserNotFoundException;
+import com.omnicommerce.token.util.ServletUtil;
+import com.omnicommerce.token.util.TokenUtil;
 import com.omnicommerce.user.User;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
@@ -21,7 +24,7 @@ import java.util.Set;
 @Log4j2
 public class JwtFilter extends OncePerRequestFilter {
     private final Set<String> shouldNotFilterPaths;
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     public JwtFilter(Set<String> shouldNotFilterPaths, UserDetailsService userDetailsService) {
         this.shouldNotFilterPaths = shouldNotFilterPaths;
@@ -30,21 +33,29 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.debug("Filter request: ", request.getServletPath());
-        String token;
+        String token = null;
         try {
             token = TokenUtil.extractTokenFromHeader(request.getHeader(HttpHeaders.AUTHORIZATION));
-        } catch (Exception e) {
-            throw new ServletException(e);
+        } catch (Exception ex) {
+            ServletUtil.handleServletException(log, response, ErrorCodes.E00005.name(), ErrorCodes.E00005.getMessage(), ex);
         }
 
-        if (!TokenUtil.parseJwt(token)) throw new ServletException();
+        try {
+            TokenUtil.parseJwt(token);
+        } catch (Exception ex) {
+            ServletUtil.handleServletException(log, response, ErrorCodes.E00005.name(), ErrorCodes.E00005.getMessage(), ex);
+            return;
+        }
 
         String username = TokenUtil.getSubject(token);
         log.debug(username);
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-        if (userDetails == null) throw new ServletException(ErrorCodes.E00003.getMessage());
+        if (userDetails == null) {
+            ServletUtil.handleServletException(log, response, ErrorCodes.E00003.name(), ErrorCodes.E00003.getMessage(), new UserNotFoundException(ErrorCodes.E00003.getMessage()));
+            return;
+        }
+
         User user = (User) userDetails;
 
         SecurityContext ctx = SecurityContextHolder.getContext();
@@ -60,4 +71,5 @@ public class JwtFilter extends OncePerRequestFilter {
 
         return this.shouldNotFilterPaths.contains(path);
     }
+
 }

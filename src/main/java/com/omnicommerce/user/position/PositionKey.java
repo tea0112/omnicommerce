@@ -1,7 +1,5 @@
 package com.omnicommerce.user.position;
 
-import com.omnicommerce.user.User;
-import com.omnicommerce.user.role.Role;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;

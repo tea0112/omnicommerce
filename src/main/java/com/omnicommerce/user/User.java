@@ -1,13 +1,10 @@
 package com.omnicommerce.user;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 @Entity
 @Table(name = "users")
@@ -18,6 +15,8 @@ public class User implements UserDetails {
     private String email;
     private String username;
     private String password;
+    @Transient
+    private Collection<GrantedAuthority> roles;
 
     public User() {
     }
@@ -58,6 +57,14 @@ public class User implements UserDetails {
         return this.password;
     }
 
+    public Collection<GrantedAuthority> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<GrantedAuthority> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public String getUsername() {
         return this.username;
@@ -65,7 +72,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new ArrayList<>(Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+        return this.roles;
     }
 
     @Override
