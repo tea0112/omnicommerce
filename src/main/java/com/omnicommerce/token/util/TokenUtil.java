@@ -24,11 +24,11 @@ public class TokenUtil {
     }
 
     static public String extractTokenFromHeader(String authorizationHeader) {
-        String beginningBearChars = "Bear ";
-        if (!authorizationHeader.startsWith(beginningBearChars)) {
+        String beginningBearerChars = "Bearer ";
+        if (!authorizationHeader.startsWith(beginningBearerChars)) {
             throw new IllegalArgumentException();
         }
-        return authorizationHeader.substring(beginningBearChars.length());
+        return authorizationHeader.substring(beginningBearerChars.length());
     }
 
     static public String getSubject(String token) {

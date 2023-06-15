@@ -25,9 +25,9 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody UserDTO userDTO) throws UserNotFoundException, LoginException {
-        Map<String, String> bearToken = new HashMap<>();
-        bearToken.put("bearToken", userService.login(userDTO));
-        return new ResponseEntity<>(bearToken, HttpStatus.OK);
+        Map<String, String> BearerToken = new HashMap<>();
+        BearerToken.put("BearerToken", userService.login(userDTO));
+        return new ResponseEntity<>(BearerToken, HttpStatus.OK);
     }
 
     @GetMapping("/test-jwt")
