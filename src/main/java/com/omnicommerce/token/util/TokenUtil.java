@@ -6,32 +6,35 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 public class TokenUtil {
-    static private final String SECRET_KEY = "SECRET";
-    static private final byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
-    static private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-    static private final Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
+  private static final String SECRET_KEY = "SECRET";
+  private static final byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
+  private static final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+  private static final Key signingKey =
+      new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
-    static public String generateToken(String username) {
+  public static String generateToken(String username) {
 
-        return Jwts.builder()
-                .setSubject(username)
-                .signWith(signatureAlgorithm, signingKey)
-                .compact();
+    return Jwts.builder().setSubject(username).signWith(signatureAlgorithm, signingKey).compact();
+  }
+
+  public static void parseJwt(String token)
+      throws ExpiredJwtException,
+          UnsupportedJwtException,
+          MalformedJwtException,
+          SignatureException,
+          IllegalArgumentException {
+    Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token);
+  }
+
+  public static String extractTokenFromHeader(String authorizationHeader) {
+    String beginningBearerChars = "Bearer ";
+    if (!authorizationHeader.startsWith(beginningBearerChars)) {
+      throw new IllegalArgumentException();
     }
+    return authorizationHeader.substring(beginningBearerChars.length());
+  }
 
-    static public void parseJwt(String token) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException {
-        Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token);
-    }
-
-    static public String extractTokenFromHeader(String authorizationHeader) {
-        String beginningBearerChars = "Bearer ";
-        if (!authorizationHeader.startsWith(beginningBearerChars)) {
-            throw new IllegalArgumentException();
-        }
-        return authorizationHeader.substring(beginningBearerChars.length());
-    }
-
-    static public String getSubject(String token) {
-        return Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token).getBody().getSubject();
-    }
+  public static String getSubject(String token) {
+    return Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token).getBody().getSubject();
+  }
 }

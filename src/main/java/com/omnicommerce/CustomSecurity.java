@@ -4,9 +4,11 @@ import com.omnicommerce.filter.JwtFilter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,12 +17,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
-@Component
+@Log4j2
+@Configuration
 public class CustomSecurity {
   private final Set<String> ShouldNotFilterPaths =
-      new HashSet<>(Arrays.asList("/api/users/login", "/api/users/signup"));
+      new HashSet<>(Arrays.asList("/api/users/login", "/api/users/signup", "/api/users/seed"));
 
   @Autowired
   @Qualifier("customAccessDeniedHandler")
@@ -36,6 +38,9 @@ public class CustomSecurity {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf().disable();
+
+    if (log.isDebugEnabled())
+      http.authorizeHttpRequests().antMatchers("/api/users/seed").permitAll();
 
     http.authorizeHttpRequests(
         auth -> {

@@ -13,26 +13,24 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("customUserDetailsService")
 public class CustomUserDetailsService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PositionRepository positionRepository;
+  @Autowired private UserRepository userRepository;
+  @Autowired private PositionRepository positionRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) {
-        Optional<User> userOptional = userRepository.findByUsername(username);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+  @Override
+  public UserDetails loadUserByUsername(String username) {
+    Optional<User> userOptional = userRepository.findByUsername(username);
+    if (userOptional.isPresent()) {
+      User user = userOptional.get();
+      Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 
-            List<Position> positions = positionRepository.findByPositionKeyUserId(user.getId());
-            for (Position r : positions) {
-                grantedAuthorities.add(new SimpleGrantedAuthority(r.getRole().getName()));
-            }
-            user.setRoles(grantedAuthorities);
-            return user;
-        } else return null;
-    }
+      List<Position> positions = positionRepository.findByPositionKeyUserId(user.getId());
+      for (Position r : positions) {
+        grantedAuthorities.add(new SimpleGrantedAuthority(r.getRole().getName()));
+      }
+      user.setRoles(grantedAuthorities);
+      return user;
+    } else return null;
+  }
 }
