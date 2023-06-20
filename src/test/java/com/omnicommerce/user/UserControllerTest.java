@@ -2,24 +2,27 @@ package com.omnicommerce.user;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
+import com.omnicommerce.reponse.exception.CustomAccessDeniedHandler;
+import com.omnicommerce.security.CustomSecurity;
 import com.omnicommerce.user.position.PositionRepository;
 import com.omnicommerce.user.role.RoleRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.context.WebApplicationContext;
 
-// @Import({CustomSecurity.class, CustomAccessDeniedHandler.class})
+@Import({CustomSecurity.class, CustomAccessDeniedHandler.class})
 @WebMvcTest(controllers = UserController.class)
-class UserControllerTest {
+class UserControllerTests {
   @Autowired private MockMvc mockMvc;
 
   @MockBean private PasswordEncoder passwordEncoder;
@@ -32,11 +35,11 @@ class UserControllerTest {
   @Autowired private WebApplicationContext context;
 
   @Test
-  @WithMockUser(value = "myusername")
-  public void shouldReturn() throws Exception {
-    this.mockMvc
-        .perform(MockMvcRequestBuilders.get("/api/users/test-jwt"))
+  public void roleHierarchy() throws Exception {
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get("/api/users/test-jwt").content(MediaType.TEXT_PLAIN_VALUE))
         .andDo(print())
-        .andExpect(content().string("you are eligible to pass this wall"));
+        .andExpect(MockMvcResultMatchers.content().string("pass"));
   }
 }

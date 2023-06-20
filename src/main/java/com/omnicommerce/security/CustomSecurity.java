@@ -1,6 +1,5 @@
-package com.omnicommerce;
+package com.omnicommerce.security;
 
-import com.omnicommerce.filter.JwtFilter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Log4j2
 @Configuration
+@EnableMethodSecurity
 public class CustomSecurity {
   private final Set<String> ShouldNotFilterPaths =
       new HashSet<>(Arrays.asList("/api/users/login", "/api/users/signup", "/api/users/seed"));

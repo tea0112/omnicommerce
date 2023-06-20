@@ -1,5 +1,6 @@
 package com.omnicommerce.user;
 
+import com.omnicommerce.user.authority.AuthorityReposity;
 import com.omnicommerce.user.position.Position;
 import com.omnicommerce.user.position.PositionRepository;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 public class CustomUserDetailsService implements UserDetailsService {
   @Autowired private UserRepository userRepository;
   @Autowired private PositionRepository positionRepository;
+  @Autowired private AuthorityReposity authorityReposity;
 
   @Override
   public UserDetails loadUserByUsername(String username) {
@@ -29,6 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
       for (Position r : positions) {
         grantedAuthorities.add(new SimpleGrantedAuthority(r.getRole().getName()));
       }
+
       user.setRoles(grantedAuthorities);
       return user;
     } else return null;

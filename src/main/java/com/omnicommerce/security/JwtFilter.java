@@ -1,4 +1,4 @@
-package com.omnicommerce.filter;
+package com.omnicommerce.security;
 
 import com.omnicommerce.golobal.exception.ErrorCodes;
 import com.omnicommerce.golobal.exception.UserNotFoundException;

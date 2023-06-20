@@ -26,4 +26,28 @@ public class Authority {
         this.role = role;
         this.permission = permission;
     }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public Permission getPermission() {
+        return permission;
+    }
+
+    public void setPermission(Permission permission) {
+        this.permission = permission;
+    }
+
+    public AuthorityKey getAuthorityKey() {
+        return authorityKey;
+    }
+
+    public void setAuthorityKey(AuthorityKey authorityKey) {
+        this.authorityKey = authorityKey;
+    }
 }
