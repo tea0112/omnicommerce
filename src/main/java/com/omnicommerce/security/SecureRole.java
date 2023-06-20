@@ -1,9 +1,11 @@
 package com.omnicommerce.security;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 
+@Configuration
 public class SecureRole {
   public static final String ADMIN = "ROLE_ADMIN";
   public static final String USER = "ROLE_USER";

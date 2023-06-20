@@ -3,7 +3,6 @@ package com.omnicommerce.security;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-import com.omnicommerce.token.util.Util;
 import com.omnicommerce.user.authority.Authority;
 import com.omnicommerce.user.authority.AuthorityKey;
 import com.omnicommerce.user.authority.AuthorityReposity;
@@ -17,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -70,8 +70,8 @@ class SecurePermissionTests {
             new Permission(1L, SecurePermission.READ), new Permission(2L, SecurePermission.WRITE));
     List<GrantedAuthority> actualGrantedAuthorities =
         Arrays.asList(
-            Util.SimpleGrantedAuthorities(SecureRole.ADMIN),
-            Util.SimpleGrantedAuthorities(SecureRole.USER));
+            new SimpleGrantedAuthority(SecureRole.ADMIN),
+            new SimpleGrantedAuthority(SecureRole.USER));
 
     Set<Permission> wanted = new TreeSet<>(Permission.permissionComparator());
     Set<Permission> actual = new TreeSet<>(Permission.permissionComparator());

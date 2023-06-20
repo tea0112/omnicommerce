@@ -8,13 +8,13 @@ import javax.xml.bind.DatatypeConverter;
 public class TokenUtil {
   private static final String SECRET_KEY = "SECRET";
   private static final byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
-  private static final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+  private static final SignatureAlgorithm TokenAlgo = SignatureAlgorithm.HS256;
   private static final Key signingKey =
-      new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
+      new SecretKeySpec(apiKeySecretBytes, TokenAlgo.getJcaName());
 
   public static String generateToken(String username) {
 
-    return Jwts.builder().setSubject(username).signWith(signatureAlgorithm, signingKey).compact();
+    return Jwts.builder().setSubject(username).signWith(TokenAlgo, signingKey).compact();
   }
 
   public static void parseJwt(String token)

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Log4j2
 @Configuration
-@EnableMethodSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class CustomSecurity {
   private final Set<String> ShouldNotFilterPaths =
       new HashSet<>(Arrays.asList("/api/users/login", "/api/users/signup", "/api/users/seed"));
@@ -47,11 +47,6 @@ public class CustomSecurity {
         auth -> {
           auth.antMatchers("/api/users/signup").permitAll();
           auth.antMatchers("/api/users/login").permitAll();
-        });
-
-    http.authorizeHttpRequests(
-        auth -> {
-          auth.antMatchers("/api/users/test-jwt").hasRole("USER");
         });
 
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

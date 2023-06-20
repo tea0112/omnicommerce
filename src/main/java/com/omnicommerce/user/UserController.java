@@ -1,6 +1,7 @@
 package com.omnicommerce.user;
 
 import com.omnicommerce.golobal.exception.LoginException;
+import com.omnicommerce.golobal.exception.SaveFailureException;
 import com.omnicommerce.golobal.exception.UserNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +24,7 @@ public class UserController {
 
   @PostMapping("/signup")
   public ResponseEntity<Object> signup(@RequestBody UserDTO userDTO)
-      throws ConstraintViolationException {
+      throws ConstraintViolationException, SaveFailureException {
     User user = userService.save(userDTO);
     return new ResponseEntity<>(user, HttpStatus.OK);
   }
@@ -37,9 +38,15 @@ public class UserController {
   }
 
   @PreAuthorize("@permission.ofRoles('ROLE_USER')")
-  @GetMapping("/test-jwt")
-  public String testJwt() {
-    return "pass";
+  @GetMapping("/test-user-role-firewall")
+  public String testUserRoleFirewall() {
+    return "pass user role";
+  }
+
+  @PreAuthorize("@permission.ofRoles('ROLE_ADMIN')")
+  @GetMapping("/test-admin-role-firewall")
+  public String testAdminRoleFirewall() {
+    return "pass admin role";
   }
 
   @GetMapping("/seed")
