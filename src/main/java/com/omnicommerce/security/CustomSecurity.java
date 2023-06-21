@@ -22,8 +22,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class CustomSecurity {
-  private final Set<String> ShouldNotFilterPaths =
-      new HashSet<>(Arrays.asList("/api/users/login", "/api/users/signup", "/api/users/seed"));
+  private static final String[] AUTH_WHITELIST = {
+      "/swagger-resources/**",
+      "/swagger-ui.html",
+      "/swagger-ui/**",
+      "/v2/api-docs",
+      "/webjars/**"
+  };
 
   @Autowired
   @Qualifier("customAccessDeniedHandler")
@@ -40,8 +45,10 @@ public class CustomSecurity {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf().disable();
 
-    if (log.isDebugEnabled())
+    if (log.isDebugEnabled()) {
       http.authorizeHttpRequests().antMatchers("/api/users/seed").permitAll();
+      http.authorizeHttpRequests().antMatchers(AUTH_WHITELIST).permitAll();
+    }
 
     http.authorizeHttpRequests(
         auth -> {
@@ -52,7 +59,7 @@ public class CustomSecurity {
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     http.addFilterBefore(
-        new JwtFilter(this.ShouldNotFilterPaths, userDetailsService),
+        new JwtFilter(userDetailsService),
         UsernamePasswordAuthenticationFilter.class);
 
     http.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler);

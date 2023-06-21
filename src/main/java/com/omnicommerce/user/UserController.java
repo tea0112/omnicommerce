@@ -30,10 +30,10 @@ public class UserController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<Map<String, String>> login(@RequestBody UserDTO userDTO)
+  public ResponseEntity<Map<String, String>> login(@RequestBody UserLoginDTO userLoginDTO)
       throws UserNotFoundException, LoginException {
     Map<String, String> BearerToken = new HashMap<>();
-    BearerToken.put("BearerToken", userService.login(userDTO));
+    BearerToken.put("BearerToken", userService.login(userLoginDTO));
     return new ResponseEntity<>(BearerToken, HttpStatus.OK);
   }
 

@@ -62,13 +62,13 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public String login(UserDTO userDTO) throws UserNotFoundException, LoginException {
-    Optional<User> userOptional = userRepository.findByUsername(userDTO.getUsername());
+  public String login(UserLoginDTO userLoginDTO) throws UserNotFoundException, LoginException {
+    Optional<User> userOptional = userRepository.findByUsername(userLoginDTO.getUsername());
 
     User user =
         userOptional.orElseThrow(() -> new UserNotFoundException(ErrorCodes.E00003.getMessage()));
 
-    if (!passwordEncoder.matches(userDTO.getPassword(), user.getPassword()))
+    if (!passwordEncoder.matches(userLoginDTO.getPassword(), user.getPassword()))
       throw new LoginException(ErrorCodes.E00004.getMessage());
 
     return TokenUtil.generateToken(user.getUsername());

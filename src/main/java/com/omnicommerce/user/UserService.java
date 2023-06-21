@@ -8,7 +8,7 @@ import org.hibernate.exception.ConstraintViolationException;
 public interface UserService {
   User save(UserDTO userDTO) throws ConstraintViolationException, SaveFailureException;
 
-  String login(UserDTO userDTO) throws UserNotFoundException, LoginException;
+  String login(UserLoginDTO userLoginDTO) throws UserNotFoundException, LoginException;
 
   void seed();
 }

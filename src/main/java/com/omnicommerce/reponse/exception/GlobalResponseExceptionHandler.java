@@ -16,32 +16,50 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Log4j2
 @ControllerAdvice
 public class GlobalResponseExceptionHandler {
-    @ExceptionHandler({ConstraintViolationException.class, UserNotFoundException.class, LoginException.class, ServletException.class})
-    public ResponseEntity<ApiError> handleException(Exception ex) {
-        if (ex instanceof ConstraintViolationException) {
-            return handleConstraintViolationException((ConstraintViolationException) ex);
-        }
-
-        if (ex instanceof UserNotFoundException) {
-            return handleUserNotFoundException((UserNotFoundException) ex);
-        }
-
-        if (ex instanceof LoginException) {
-            return handleLoginException((LoginException) ex);
-        }
-
-        return ApiErrorResponseEntities(log, ErrorCodes.E00001.name(), ErrorCodes.E00001.getMessage(), ex, HttpStatus.INTERNAL_SERVER_ERROR);
+  @ExceptionHandler({
+    ConstraintViolationException.class,
+    UserNotFoundException.class,
+    LoginException.class,
+    ServletException.class
+  })
+  public ResponseEntity<ApiError> handleException(Exception ex) {
+    if (ex instanceof ConstraintViolationException) {
+      return handleConstraintViolationException((ConstraintViolationException) ex);
     }
 
-    private ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException ex) {
-        return ApiErrorResponseEntities(log, ErrorCodes.E00003.name(), ErrorCodes.E00003.getMessage(), ex, HttpStatus.BAD_REQUEST);
+    if (ex instanceof UserNotFoundException) {
+      return handleUserNotFoundException((UserNotFoundException) ex);
     }
 
-    private ResponseEntity<ApiError> handleLoginException(LoginException ex) {
-        return ApiErrorResponseEntities(log, ErrorCodes.E00004.name(), ErrorCodes.E00004.getMessage(), ex, HttpStatus.UNAUTHORIZED);
+    if (ex instanceof LoginException) {
+      return handleLoginException((LoginException) ex);
     }
 
-    private ResponseEntity<ApiError> handleConstraintViolationException(ConstraintViolationException violationsEx) {
-        return ApiErrorResponseEntities(log, ErrorCodes.E00002.name(), ErrorCodes.E00002.getMessage(), violationsEx, HttpStatus.BAD_REQUEST);
-    }
+    return ApiErrorResponseEntities(
+        log,
+        ErrorCodes.E00001.name(),
+        ErrorCodes.E00001.getMessage(),
+        ex,
+        HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  private ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException ex) {
+    return ApiErrorResponseEntities(
+        log, ErrorCodes.E00003.name(), ErrorCodes.E00003.getMessage(), ex, HttpStatus.BAD_REQUEST);
+  }
+
+  private ResponseEntity<ApiError> handleLoginException(LoginException ex) {
+    return ApiErrorResponseEntities(
+        log, ErrorCodes.E00004.name(), ErrorCodes.E00004.getMessage(), ex, HttpStatus.UNAUTHORIZED);
+  }
+
+  private ResponseEntity<ApiError> handleConstraintViolationException(
+      ConstraintViolationException violationsEx) {
+    return ApiErrorResponseEntities(
+        log,
+        ErrorCodes.E00002.name(),
+        ErrorCodes.E00002.getMessage(),
+        violationsEx,
+        HttpStatus.BAD_REQUEST);
+  }
 }
