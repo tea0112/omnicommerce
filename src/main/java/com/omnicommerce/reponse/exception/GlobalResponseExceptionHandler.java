@@ -13,7 +13,6 @@ import javax.servlet.ServletException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.omnicommerce.reponse.exception.ApiError.ApiErrorResponseEntities;
@@ -35,21 +34,18 @@ public class GlobalResponseExceptionHandler {
       return handleLoginException((LoginException) ex);
     }
 
-    return ApiErrorResponseEntities(log, ErrorCodes.E00001.name(), ErrorCodes.E00001.getMessage(), ex, HttpStatus.INTERNAL_SERVER_ERROR);
+    return ApiErrorResponseEntities(log, ErrorCodes.E00001.name(), ErrorCodes.E00001.getMessage(), ex, HttpStatus.INTERNAL_SERVER_ERROR, null);
   }
 
   private ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException ex) {
-    return ApiErrorResponseEntities(log, ErrorCodes.E00003.name(), ErrorCodes.E00003.getMessage(), ex, HttpStatus.BAD_REQUEST);
+    return ApiErrorResponseEntities(log, ErrorCodes.E00003.name(), ErrorCodes.E00003.getMessage(), ex, HttpStatus.BAD_REQUEST, null);
   }
 
   private ResponseEntity<ApiError> handleLoginException(LoginException ex) {
-    return ApiErrorResponseEntities(log, ErrorCodes.E00004.name(), ErrorCodes.E00004.getMessage(), ex, HttpStatus.UNAUTHORIZED);
+    return ApiErrorResponseEntities(log, ErrorCodes.E00004.name(), ErrorCodes.E00004.getMessage(), ex, HttpStatus.UNAUTHORIZED, null);
   }
 
   private ResponseEntity<ApiError> handleConstraintViolationException(ConstraintViolationException violationsEx) {
-    Set<ConstraintViolation<?>> constraintViolations = violationsEx.getConstraintViolations();
-    String userMessage = violationsEx.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(", "));
-
-    return ApiErrorResponseEntities(log, ErrorCodes.E00002.name(), userMessage, violationsEx, HttpStatus.BAD_REQUEST);
+    return ApiErrorResponseEntities(log, ErrorCodes.E00001.name(), ErrorCodes.E00001.getMessage(), violationsEx, HttpStatus.BAD_REQUEST, violationsEx.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.toList()));
   }
 }
